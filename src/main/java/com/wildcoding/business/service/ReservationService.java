@@ -1,5 +1,6 @@
 package com.wildcoding.business.service;
 
+
 import com.wildcoding.business.domain.RoomReservation;
 import com.wildcoding.data.entity.Guest;
 import com.wildcoding.data.entity.Reservation;
@@ -14,7 +15,6 @@ import java.util.*;
 
 @Service
 public class ReservationService {
-
     private RoomRepository roomRepository;
     private GuestRepository guestRepository;
     private ReservationRepository reservationRepository;
@@ -37,19 +37,23 @@ public class ReservationService {
             roomReservationMap.put(room.getId(), roomReservation);
         });
         Iterable<Reservation> reservations = this.reservationRepository.findByDate(new java.sql.Date(date.getTime()));
-        if (reservations != null) {
+        if (null != reservations) {
             reservations.forEach(reservation -> {
-                Optional<Guest> guestResponse = this.guestRepository.findById(reservation.getGuestId());
-                if (guestResponse.isPresent()) {
-                    Guest guest = guestResponse.get();
+                Optional<Guest> guestRs = this.guestRepository.findById(reservation.getGuestId());
+                if (guestRs.isPresent()) {
+                    Guest guest=guestRs.get();
                     RoomReservation roomReservation = roomReservationMap.get(reservation.getId());
                     roomReservation.setDate(date);
                     roomReservation.setFirstName(guest.getFirstName());
                     roomReservation.setLastName(guest.getLastName());
+                    roomReservation.setGuestId(guest.getId());
                 }
             });
         }
-        return new ArrayList<>(roomReservationMap.values());
+        List<RoomReservation> roomReservations = new ArrayList<>();
+        for (Long roomId : roomReservationMap.keySet()) {
+            roomReservations.add(roomReservationMap.get(roomId));
+        }
+        return roomReservations;
     }
-
 }

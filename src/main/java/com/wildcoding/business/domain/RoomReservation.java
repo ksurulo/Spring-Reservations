@@ -3,19 +3,20 @@ package com.wildcoding.business.domain;
 import java.util.Date;
 
 public class RoomReservation {
-    private long RoomId;
+    private long roomId;
     private long guestId;
     private String roomName;
     private String roomNumber;
     private String firstName;
     private String lastName;
+    private Date date;
 
     public long getRoomId() {
-        return RoomId;
+        return roomId;
     }
 
     public void setRoomId(long roomId) {
-        RoomId = roomId;
+        this.roomId = roomId;
     }
 
     public long getGuestId() {
@@ -65,6 +66,4 @@ public class RoomReservation {
     public void setDate(Date date) {
         this.date = date;
     }
-
-    private Date date;
 }
