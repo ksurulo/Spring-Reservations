@@ -2,6 +2,7 @@ package com.wildcoding.web.application;
 
 import com.wildcoding.business.domain.RoomReservation;
 import com.wildcoding.business.service.ReservationService;
+import com.wildcoding.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,25 +20,13 @@ import java.util.List;
 @RequestMapping(value = "/reservations")
 public class ReservationController {
 
-    private final static DateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
-
     @Autowired
     private ReservationService reservationService;
 
     @RequestMapping(method = RequestMethod.GET)
     public String getReservations(@RequestParam(value = "date", required = false)
                                           String dateString, Model model) {
-        Date date = null;
-        if (dateString != null) {
-            try {
-                date = DATE_FORMAT.parse(dateString);
-            } catch (ParseException e) {
-                date = new Date();
-            }
-        } else {
-            date = new Date();
-        }
-        List<RoomReservation> roomReservationList = this.reservationService.getRoomReservationsForDate(date);
+        List<RoomReservation> roomReservationList = this.reservationService.getRoomReservationsForDate(dateString);
         model.addAttribute("roomReservations", roomReservationList);
         return "reservations";
     }

@@ -8,6 +8,7 @@ import com.wildcoding.data.entity.Room;
 import com.wildcoding.data.repository.GuestRepository;
 import com.wildcoding.data.repository.ReservationRepository;
 import com.wildcoding.data.repository.RoomRepository;
+import com.wildcoding.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,6 +27,10 @@ public class ReservationService {
         this.reservationRepository = reservationRepository;
     }
 
+    public List<RoomReservation> getRoomReservationsForDate(String stringDate) {
+        return getRoomReservationsForDate(DateUtils.toDate(stringDate));
+    }
+
     public List<RoomReservation> getRoomReservationsForDate(Date date) {
         Iterable<Room> rooms = this.roomRepository.findAll();
         Map<Long, RoomReservation> roomReservationMap = new HashMap<>();
@@ -41,7 +46,7 @@ public class ReservationService {
             reservations.forEach(reservation -> {
                 Optional<Guest> guestRs = this.guestRepository.findById(reservation.getGuestId());
                 if (guestRs.isPresent()) {
-                    Guest guest=guestRs.get();
+                    Guest guest = guestRs.get();
                     RoomReservation roomReservation = roomReservationMap.get(reservation.getId());
                     roomReservation.setDate(date);
                     roomReservation.setFirstName(guest.getFirstName());
